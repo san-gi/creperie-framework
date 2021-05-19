@@ -41,9 +41,15 @@ class Ingredients
      */
     private $crepes;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Crepe::class, mappedBy="extendIngredients")
+     */
+    private $CrepesExtend;
+
     public function __construct()
     {
         $this->crepes = new ArrayCollection();
+        $this->CrepesExtend = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,5 +110,32 @@ class Ingredients
     public function __toString()
     {
         return $this->getName();
+    }
+
+    /**
+     * @return Collection|Crepe[]
+     */
+    public function getCrepesExtend(): Collection
+    {
+        return $this->CrepesExtend;
+    }
+
+    public function addCrepesExtend(Crepe $crepesExtend): self
+    {
+        if (!$this->CrepesExtend->contains($crepesExtend)) {
+            $this->CrepesExtend[] = $crepesExtend;
+            $crepesExtend->addExtendIngredient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCrepesExtend(Crepe $crepesExtend): self
+    {
+        if ($this->CrepesExtend->removeElement($crepesExtend)) {
+            $crepesExtend->removeExtendIngredient($this);
+        }
+
+        return $this;
     }
 }

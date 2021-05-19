@@ -1,10 +1,11 @@
 import Vue from 'vue'
 
+import App from '../components/App.vue'
 import Menu from '../components/Menu.vue'
 import vuetify from "./vuetify";
 
-import routerMenu from './routerMenu'
+import router from './routerMenu'
 new Vue({
-    routerMenu,
+    router,
     vuetify,
-    render: h => h(Menu) }).$mount('#menu')
+    render: h => h(App) }).$mount('#menu')

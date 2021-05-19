@@ -55,10 +55,23 @@ class Crepe
      */
     private $factures;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     *  @Groups({"crepe"})
+     */
+    private $description;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Panier::class, mappedBy="crepes")
+     */
+    private $paniers;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->factures = new ArrayCollection();
+        $this->paniers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,4 +157,45 @@ class Crepe
     {
         return $this->getName();
     }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Panier[]
+     */
+    public function getPaniers(): Collection
+    {
+        return $this->paniers;
+    }
+
+    public function addPanier(Panier $panier): self
+    {
+        if (!$this->paniers->contains($panier)) {
+            $this->paniers[] = $panier;
+            $panier->addCrepe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePanier(Panier $panier): self
+    {
+        if ($this->paniers->removeElement($panier)) {
+            $panier->removeCrepe($this);
+        }
+
+        return $this;
+    }
+
+
 }

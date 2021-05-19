@@ -36,7 +36,6 @@ export default {
       response.data.forEach(c => {
         this.crepes.push(c)
       })
-      console.log(this.crepes)
     })
 
   }

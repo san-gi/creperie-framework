@@ -38,6 +38,11 @@ class Factures
      */
     private $crepes;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Panier::class, mappedBy="facture", cascade={"persist", "remove"})
+     */
+    private $panier;
+
     public function __construct()
     {
         $this->crepes = new ArrayCollection();
@@ -92,6 +97,28 @@ class Factures
     public function removeCrepe(crepe $crepe): self
     {
         $this->crepes->removeElement($crepe);
+
+        return $this;
+    }
+
+    public function getPanier(): ?Panier
+    {
+        return $this->panier;
+    }
+
+    public function setPanier(?Panier $panier): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($panier === null && $this->panier !== null) {
+            $this->panier->setFacture(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($panier !== null && $panier->getFacture() !== $this) {
+            $panier->setFacture($this);
+        }
+
+        $this->panier = $panier;
 
         return $this;
     }
