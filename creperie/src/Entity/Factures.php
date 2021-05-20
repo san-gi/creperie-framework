@@ -12,7 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=FacturesRepository::class)
  *
- *  @ApiResource()
+ *  @ApiResource(
+ *     paginationEnabled=false,
+ *     normalizationContext={"groups"={"facture","panier","crepescommande","crepe"}},
+ *     )
  */
 class Factures
 {
@@ -20,16 +23,22 @@ class Factures
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"facture"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Groups({"facture"})
      */
     private $date;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"facture"})
      */
     private $etat;
 
@@ -40,6 +49,8 @@ class Factures
 
     /**
      * @ORM\OneToOne(targetEntity=Panier::class, mappedBy="facture", cascade={"persist", "remove"})
+     *
+     * @Groups({"facture"})
      */
     private $panier;
 

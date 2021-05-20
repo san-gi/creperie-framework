@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     collectionOperations={"get"},
  *     itemOperations={"get"},
  *     paginationEnabled=false,
- *     normalizationContext={"groups"={"crepe"}},
+ *     normalizationContext={"groups"={"crepe","ing"}},
  * )
  */
 class Crepe

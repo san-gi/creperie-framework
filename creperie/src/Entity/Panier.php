@@ -38,7 +38,6 @@ class Panier
     /**
      * @ORM\OneToOne(targetEntity=Factures::class, inversedBy="panier", cascade={"persist", "remove"})
      *
-     * @Groups({"panier"})
      */
     private $facture;
 

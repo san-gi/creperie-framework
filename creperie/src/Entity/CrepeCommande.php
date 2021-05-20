@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\CrepeCommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=CrepeCommandeRepository::class)
+ *
+ * @ApiResource(
+ *     paginationEnabled=false,
+ *     normalizationContext={"groups"={"commands"}},
+ *     )
  */
 #[ApiResource]
 class CrepeCommande
@@ -18,23 +24,22 @@ class CrepeCommande
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"commands"})
      */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=crepe::class, inversedBy="Extra")
+     * @ORM\ManyToOne(targetEntity=Crepe::class, inversedBy="Extra")
      */
     private $crepe;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ingredients::class, inversedBy="crepeCommandes")
+     * @ORM\ManyToMany(targetEntity=Ingredients::class, inversedBy="crepeCommandes")
      */
     private $relation;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Panier::class, inversedBy="CrepeCOmmande")
-     */
-    private $panier;
+
 
     public function __construct()
     {
@@ -78,18 +83,6 @@ class CrepeCommande
     public function removeRelation(ingredients $relation): self
     {
         $this->relation->removeElement($relation);
-
-        return $this;
-    }
-
-    public function getPanier(): ?Panier
-    {
-        return $this->panier;
-    }
-
-    public function setPanier(?Panier $panier): self
-    {
-        $this->panier = $panier;
 
         return $this;
     }

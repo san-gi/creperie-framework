@@ -12,11 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=IngredientsRepository::class)
  *
- *  @ApiResource(
+ * @ApiResource(
  *     paginationEnabled=false,
- *     normalizationContext={"groups"={"ingredients"}},
+ *     normalizationContext={"groups"={"ing"}},
  *     )
- *
  */
 class Ingredients
 {
@@ -25,21 +24,21 @@ class Ingredients
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups({"ingredients"})
+     * @Groups({"ing"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"ingredients"})
+     * @Groups({"ing"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="float")
      *
-     * @Groups({"ingredients"})
+     * @Groups({"ing"})
      */
     private $price;
 
@@ -55,7 +54,7 @@ class Ingredients
     private $CrepesExtend;
 
     /**
-     * @ORM\ManyToMany(targetEntity=CrepeCommande::class, mappedBy="relation")
+     * @ORM\ManyToMany(targetEntity=CrepeCommande::class, mappedBy="extra")
      */
     private $crepeCommandes;
 
@@ -165,7 +164,7 @@ class Ingredients
     {
         if (!$this->crepeCommandes->contains($crepeCommande)) {
             $this->crepeCommandes[] = $crepeCommande;
-            $crepeCommande->addRelation($this);
+            $crepeCommande->addExtra($this);
         }
 
         return $this;
@@ -174,7 +173,7 @@ class Ingredients
     public function removeCrepeCommande(CrepeCommande $crepeCommande): self
     {
         if ($this->crepeCommandes->removeElement($crepeCommande)) {
-            $crepeCommande->removeRelation($this);
+            $crepeCommande->addExtra($this);
         }
 
         return $this;
