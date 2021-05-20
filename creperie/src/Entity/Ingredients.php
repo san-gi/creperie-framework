@@ -13,7 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=IngredientsRepository::class)
  *
  *  @ApiResource(
- *     paginationEnabled=false
+ *     paginationEnabled=false,
+ *     normalizationContext={"groups"={"ingredients"}},
  *     )
  *
  */
@@ -23,21 +24,28 @@ class Ingredients
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"ingredients"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups({"ingredients"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="float")
+     *
+     * @Groups({"ingredients"})
      */
     private $price;
 
     /**
      * @ORM\ManyToMany(targetEntity=Crepe::class, mappedBy="Ingredients")
+     *
      */
     private $crepes;
 
@@ -46,10 +54,16 @@ class Ingredients
      */
     private $CrepesExtend;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=CrepeCommande::class, mappedBy="relation")
+     */
+    private $crepeCommandes;
+
     public function __construct()
     {
         $this->crepes = new ArrayCollection();
         $this->CrepesExtend = new ArrayCollection();
+        $this->crepeCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -134,6 +148,33 @@ class Ingredients
     {
         if ($this->CrepesExtend->removeElement($crepesExtend)) {
             $crepesExtend->removeExtendIngredient($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CrepeCommande[]
+     */
+    public function getCrepeCommandes(): Collection
+    {
+        return $this->crepeCommandes;
+    }
+
+    public function addCrepeCommande(CrepeCommande $crepeCommande): self
+    {
+        if (!$this->crepeCommandes->contains($crepeCommande)) {
+            $this->crepeCommandes[] = $crepeCommande;
+            $crepeCommande->addRelation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCrepeCommande(CrepeCommande $crepeCommande): self
+    {
+        if ($this->crepeCommandes->removeElement($crepeCommande)) {
+            $crepeCommande->removeRelation($this);
         }
 
         return $this;

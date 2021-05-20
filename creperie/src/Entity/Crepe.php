@@ -67,11 +67,17 @@ class Crepe
      */
     private $paniers;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CrepeCommande::class, mappedBy="crepe")
+     */
+    private $Extra;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->factures = new ArrayCollection();
         $this->paniers = new ArrayCollection();
+        $this->Extra = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,6 +198,36 @@ class Crepe
     {
         if ($this->paniers->removeElement($panier)) {
             $panier->removeCrepe($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CrepeCommande[]
+     */
+    public function getExtra(): Collection
+    {
+        return $this->Extra;
+    }
+
+    public function addExtra(CrepeCommande $extra): self
+    {
+        if (!$this->Extra->contains($extra)) {
+            $this->Extra[] = $extra;
+            $extra->setCrepe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExtra(CrepeCommande $extra): self
+    {
+        if ($this->Extra->removeElement($extra)) {
+            // set the owning side to null (unless already changed)
+            if ($extra->getCrepe() === $this) {
+                $extra->setCrepe(null);
+            }
         }
 
         return $this;

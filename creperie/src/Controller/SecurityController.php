@@ -33,4 +33,13 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+    /**
+     * @Route("/account", name="app_account")
+     */
+    public function account(AuthenticationUtils $authenticationUtils): Response
+    {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+        return $this->json(['last_username' => $lastUsername,'is_authenticated' => json_encode(!empty($this->getUser()))]);
+    }
 }
