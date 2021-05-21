@@ -18,7 +18,7 @@ export default {
     CrepeCard
   },
   data: () => ({
-    crepes: JSON.parse(localStorage.crepes),
+    crepes: localStorage.crepes?JSON.parse(localStorage.crepes):[],
     url:window.location.protocol + '//' + window.location.host + '/api',
   }),
   methods: {
