@@ -15,9 +15,25 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *     paginationEnabled=false,
  *     normalizationContext={"groups"={"commands"}},
+ *     itemOperations={
+ *          "put",
+ *          "delete",
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"commands","crepe","ing"}
+ *               }
+ *          }
+ *     },
+ *     collectionOperations={
+ *         "post",
+     *     "get"={
+     *              "normalization_context"={
+     *                  "groups"={"commands","crepe","ing"}
+     *               }
+     *          }
+     *     }
  *     )
  */
-#[ApiResource]
 class CrepeCommande
 {
     /**
@@ -30,20 +46,23 @@ class CrepeCommande
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Crepe::class, inversedBy="Extra")
+     * @ORM\ManyToOne(targetEntity=Crepe::class)
+     *
+     * @Groups({"commands"})
      */
     private $crepe;
 
     /**
      * @ORM\ManyToMany(targetEntity=Ingredients::class, inversedBy="crepeCommandes")
+     *
+     * @Groups({"commands"})
      */
-    private $relation;
-
+    private $extra;
 
 
     public function __construct()
     {
-        $this->relation = new ArrayCollection();
+        $this->extra = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,23 +85,23 @@ class CrepeCommande
     /**
      * @return Collection|ingredients[]
      */
-    public function getRelation(): Collection
+    public function getExtra(): Collection
     {
-        return $this->relation;
+        return $this->extra;
     }
 
-    public function addRelation(ingredients $relation): self
+    public function addExtra(ingredients $extra): self
     {
-        if (!$this->relation->contains($relation)) {
-            $this->relation[] = $relation;
+        if (!$this->extra->contains($extra)) {
+            $this->extra[] = $extra;
         }
 
         return $this;
     }
 
-    public function removeRelation(ingredients $relation): self
+    public function removeExtra(ingredients $extra): self
     {
-        $this->relation->removeElement($relation);
+        $this->extra->removeElement($extra);
 
         return $this;
     }
