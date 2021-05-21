@@ -15,6 +15,23 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *     paginationEnabled=false,
  *     normalizationContext={"groups"={"pa"}},
+ *     itemOperations={
+ *          "put",
+ *          "delete",
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"pa","commands","crepe","ing"}
+ *               }
+ *          }
+ *     },
+ *     collectionOperations={
+ *         "post",
+ *     "get"={
+ *              "normalization_context"={
+ *                  "groups"={"pa","commands","crepe","ing"}
+ *               }
+ *          }
+ *     }
  *     )
  */
 
@@ -52,10 +69,17 @@ class Panier
      */
     private $CrepeCommande;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CrepeCommande::class, mappedBy="panier")
+     * @Groups({"pa"})
+     */
+    private $commands;
+
     public function __construct()
     {
         $this->crepes = new ArrayCollection();
         $this->CrepeCommande = new ArrayCollection();
+        $this->commands = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +159,36 @@ class Panier
             // set the owning side to null (unless already changed)
             if ($crepeCommande->getPanier() === $this) {
                 $crepeCommande->setPanier(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CrepeCommande[]
+     */
+    public function getCommands(): Collection
+    {
+        return $this->commands;
+    }
+
+    public function addCommand(CrepeCommande $command): self
+    {
+        if (!$this->commands->contains($command)) {
+            $this->commands[] = $command;
+            $command->setPanier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommand(CrepeCommande $command): self
+    {
+        if ($this->commands->removeElement($command)) {
+            // set the owning side to null (unless already changed)
+            if ($command->getPanier() === $this) {
+                $command->setPanier(null);
             }
         }
 

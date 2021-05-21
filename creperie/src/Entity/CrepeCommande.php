@@ -26,12 +26,12 @@ use Doctrine\ORM\Mapping as ORM;
  *     },
  *     collectionOperations={
  *         "post",
-     *     "get"={
-     *              "normalization_context"={
-     *                  "groups"={"commands","crepe","ing"}
-     *               }
-     *          }
-     *     }
+ *     "get"={
+ *              "normalization_context"={
+ *                  "groups"={"commands","crepe","ing"}
+ *               }
+ *          }
+ *     }
  *     )
  */
 class CrepeCommande
@@ -41,14 +41,14 @@ class CrepeCommande
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups({"commands"})
+     * @Groups({"commands","commandsPost"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Crepe::class)
      *
-     * @Groups({"commands"})
+     * @Groups({"commands","commandsPost"})
      */
     private $crepe;
 
@@ -58,6 +58,13 @@ class CrepeCommande
      * @Groups({"commands"})
      */
     private $extra;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Panier::class, inversedBy="commands")
+     *
+     * @Groups({"commandsPost"})
+     */
+    private $panier;
 
 
     public function __construct()
@@ -102,6 +109,18 @@ class CrepeCommande
     public function removeExtra(ingredients $extra): self
     {
         $this->extra->removeElement($extra);
+
+        return $this;
+    }
+
+    public function getPanier(): ?Panier
+    {
+        return $this->panier;
+    }
+
+    public function setPanier(?Panier $panier): self
+    {
+        $this->panier = $panier;
 
         return $this;
     }

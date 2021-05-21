@@ -68,7 +68,33 @@ export default {
       localStorage.panier = JSON.stringify(this.items);
     },
     valider(){
-      
+      //Validation du panier : récupérer le panier actuelle et changer son état, puis clean du panier
+      //localStorage.panier = "";
+      console.log("oui");
+
+      axios.post(this.url+ '/api/paniers',{etat:0},{
+        headers:{
+          'Accept': 'application/json'
+        }}
+      ).then(response => {
+        let id =response.data.id;
+        this.items.forEach(item=>{
+          let extra = [];
+          if(this.extra.length>0)
+            extra = item.extra.map(i=>"/api/ingredients/"+this.ingredients.filter(i =>i.name==item)[0].id)
+          axios.post(this.url+ '/api/crepe_commandes',{"crepe":"/api/crepes/"+item.crepe.id,"extra":extra, "panier":"/api/paniers/"+id},{
+            headers:{
+              'Accept': 'application/json'
+            }}
+          ).then(response => {
+
+          }).catch(error=>{
+            console.log(error)
+          })
+        })
+      }).catch(error=>{
+        console.log(error)
+      })
     }
   },
 
