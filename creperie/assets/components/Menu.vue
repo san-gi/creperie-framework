@@ -18,7 +18,7 @@ export default {
     CrepeCard
   },
   data: () => ({
-    crepes: localStorage.crepes?JSON.parse(localStorage.crepes):[],
+    crepes: localStorage.getItem("crepes")?JSON.parse(localStorage.crepes):[],
     url:window.location.protocol + '//' + window.location.host + '/api',
   }),
   methods: {
@@ -28,7 +28,6 @@ export default {
     /**
      * Appel de l'api pour récupérer chaque crépes
      */
-    console.log(window.location.protocol+" "+this.url)
     axios.get(this.url+ '/crepes',{
       headers:{
         'Accept': 'application/json'

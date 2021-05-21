@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ApiResource(
  *     paginationEnabled=false,
- *     normalizationContext={"groups"={"panier"}},
+ *     normalizationContext={"groups"={"pa"}},
  *     )
  */
 
@@ -25,40 +25,37 @@ class Panier
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups({"panier"})
+     * @Groups({"pa"})
      */
     private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity=Crepe::class, inversedBy="paniers")
-     *
+     * @Groups({"pa"})
      */
     private $crepes;
 
     /**
      * @ORM\OneToOne(targetEntity=Factures::class, inversedBy="panier", cascade={"persist", "remove"})
-     *
+     * @Groups({"pa"})
      */
     private $facture;
 
     /**
      * @ORM\Column(type="integer")
-     *
-     * @Groups({"panier"})
+     * @Groups({"pa"})
      */
     private $etat;
 
     /**
-     * @ORM\OneToMany(targetEntity=CrepeCommande::class, mappedBy="panier")
-     *
-     * @Groups({"panier"})
+     * @ORM\OneToMany(targetEntity=CrepeCommande::class, mappedBy="Panier")
      */
-    private $CrepeCOmmande;
+    private $CrepeCommande;
 
     public function __construct()
     {
         $this->crepes = new ArrayCollection();
-        $this->CrepeCOmmande = new ArrayCollection();
+        $this->CrepeCommande = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,27 +114,27 @@ class Panier
     /**
      * @return Collection|CrepeCommande[]
      */
-    public function getCrepeCOmmande(): Collection
+    public function getCrepeCommande(): Collection
     {
-        return $this->CrepeCOmmande;
+        return $this->CrepeCommande;
     }
 
-    public function addCrepeCOmmande(CrepeCommande $crepeCOmmande): self
+    public function addCrepeCommande(CrepeCommande $crepeCommande): self
     {
-        if (!$this->CrepeCOmmande->contains($crepeCOmmande)) {
-            $this->CrepeCOmmande[] = $crepeCOmmande;
-            $crepeCOmmande->setPanier($this);
+        if (!$this->CrepeCommande->contains($crepeCommande)) {
+            $this->CrepeCommande[] = $crepeCommande;
+            $crepeCommande->setPanier($this);
         }
 
         return $this;
     }
 
-    public function removeCrepeCOmmande(CrepeCommande $crepeCOmmande): self
+    public function removeCrepeCommande(CrepeCommande $crepeCommande): self
     {
-        if ($this->CrepeCOmmande->removeElement($crepeCOmmande)) {
+        if ($this->CrepeCommande->removeElement($crepeCommande)) {
             // set the owning side to null (unless already changed)
-            if ($crepeCOmmande->getPanier() === $this) {
-                $crepeCOmmande->setPanier(null);
+            if ($crepeCommande->getPanier() === $this) {
+                $crepeCommande->setPanier(null);
             }
         }
 

@@ -4,21 +4,17 @@
       <div  v-if="crepe" class="album py-5 h-100" style="background-color: #95a5a6">
         <div class="container" >
           <p>{{this.crepe.name}}</p>
-
           <v-card
               elevation="24"
               outlined
               shaped
               color="blue-grey darken-1"
-              dark
-          ><v-img
+              dark><v-img
               class="white--text align-end"
               height="300px"
               :src="'./img/'+crepe.img+'.jpg'">
           </v-img>
-
             <v-card-text class="text--primary">
-
               <template v-slot:progress>
                 <v-progress-linear
                     absolute
@@ -27,53 +23,34 @@
                     indeterminate
                 ></v-progress-linear>
               </template>
-
               <v-row>
-
                   <v-col class="text-center">
                     <h3 class="headline">
                       {{ this.crepe.name }}
                     </h3>
                     <span class="grey--text text--lighten-1">{{ this.crepe.desc }}</span>
                   </v-col>
-
               </v-row>
+              <v-chip-group active-class="deep-purple accent-4 white--text" column>
+                <v-chip
+                    v-for="(i,index) in this.crepe.ingredients" :key="index"
+                    color="green">
+                  {{i.name}}
+                </v-chip>
+              </v-chip-group>
             </v-card-text>
             <v-form>
               <v-container>
                 <v-row>
-                  <v-col
-                      cols="12"
-                      md="6"
-                  >
-                    <v-text-field
-                        v-model="name"
-                        :disabled="isUpdating"
-                        filled
-                        color="blue-grey lighten-2"
-                        label="Name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                      cols="12"
-                      md="6">
-                    <v-text-field
-                        v-model="title"
-                        :disabled="isUpdating"
-                        filled
-                        color="blue-grey lighten-2"
-                        label="Title"
-                    ></v-text-field>
-                  </v-col>
                   <v-col cols="12">
                     <v-autocomplete
-                        v-model="friends"
+                        v-model="extra"
                         :disabled="isUpdating"
-                        :items="people"
+                        :items="extraSelect"
                         filled
                         chips
-                        color="blue-grey lighten-2"
-                        label="Select"
+                        color="dark"
+                        label="un petit extra ?"
                         item-text="name"
                         item-value="name"
                         multiple>
@@ -95,9 +72,11 @@
                           <v-list-item-content v-text="data.item"></v-list-item-content>
                         </template>
                         <template v-else>
+                          <!-- Si jamais j'ajoute une image pour les ingrédients, why not
                           <v-list-item-avatar>
                             <img :src="data.item.avatar">u
                           </v-list-item-avatar>
+                          -->
                           <v-list-item-content>
                             <v-list-item-title v-html="data.item.name"></v-list-item-title>
                             <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
@@ -111,41 +90,22 @@
             </v-form>
             <v-divider></v-divider>
             <v-card-actions>
-              <v-switch
-                  v-model="autoUpdate"
-                  :disabled="isUpdating"
-                  class="mt-0"
-                  color="green lighten-2"
-                  hide-details
-                  label="Auto Update"></v-switch>
               <v-spacer></v-spacer>
-              <v-btn
-                  :disabled="autoUpdate"
-                  :loading="isUpdating"
-                  color="blue-grey darken-3"
-                  depressed
-                  @click="isUpdating = true">
-                <v-icon left>
-                  mdi-update
-                </v-icon>
-                Update Now
-              </v-btn>
               <v-btn :to="{name: 'menu'}"
-                     color="orange"
+                     color="black"
                      text>
                 Retour au menu
               </v-btn>
-              <v-btn :to="{name: 'panier'}"
-                  color="orange"
+              <v-btn :to="{name: 'panier',params:{crepe:this.crepe,extra:this.extra}}"
+                  color="black"
                   text>
                 Ajouter au panier
               </v-btn>
-              <v-btn :to="{name: 'menu'}"
-                     color="orange"
+              <v-btn :to="{name: 'panier'}"
+                     color="black"
                   text>
                 Aller au panier
               </v-btn>
-
             </v-card-actions>
           </v-card>
         </div>
@@ -155,40 +115,22 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name:"Crepe",
 
   data(){
-    const srcs = {
-      1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-      2: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-      3: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-      4: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-      5: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-    }
     return {
       crepe:Object,
-      Nb:Number,
+      ingredients: localStorage.getItem("ingredients")?JSON.parse(localStorage.crepes):[],
       extra: [],
+      extraSelect:[],
+      url:window.location.protocol + '//' + window.location.host + '/api',
       autoUpdate: true,
-      friends: ['Sandra Adams', 'Britta Holt'],
+      friends: [],
       isUpdating: false,
       name: 'Midnight Crew',
-      people: [
-        { header: 'Group 1' },
-        { name: 'Sandra Adams', group: 'Group 1', avatar: srcs[1] },
-        { name: 'Ali Connors', group: 'Group 1', avatar: srcs[2] },
-        { name: 'Trevor Hansen', group: 'Group 1', avatar: srcs[3] },
-        { name: 'Tucker Smith', group: 'Group 1', avatar: srcs[2] },
-        { divider: true },
-        { header: 'Group 2' },
-        { name: 'Britta Holt', group: 'Group 2', avatar: srcs[4] },
-        { name: 'Jane Smith ', group: 'Group 2', avatar: srcs[5] },
-        { name: 'John Smith', group: 'Group 2', avatar: srcs[1] },
-        { name: 'Sandra Williams', group: 'Group 2', avatar: srcs[3] },
-      ],
-      title: 'The summer breeze',
-
     }
   },
   watch: {
@@ -201,13 +143,28 @@ export default {
 
   methods: {
     remove (item) {
-      const index = this.friends.indexOf(item.name)
-      if (index >= 0) this.friends.splice(index, 1)
+      const index = this.extra.indexOf(item.name)
+      if (index >= 0) this.extra.splice(index, 1)
     },
   },
   mounted() {
-    console.log("oui")
     this.crepe= this.$route.params.crepe
+    axios.get(this.url+ '/ingredients',{
+      headers:{
+        'Accept': 'application/json'
+      }}
+    ).then(response => {
+      this.ingredients=response.data
+      localStorage.ingredients = JSON.stringify(response.data)
+
+      this.extraSelect.push({ header: 'Ingredients' },)
+      this.ingredients.forEach(ingredient =>{
+        console.log(this.crepe.ingredients.filter(item=>item.name===ingredient.name)==0)
+        if(this.crepe.ingredients.filter(item=>item.name===ingredient.name)==0)
+        this.extraSelect.push({ name: ingredient.name, group: ingredient.price+" €" },)
+      })
+      console.log(this.extraSelect)
+    })
   }
 }
 </script>

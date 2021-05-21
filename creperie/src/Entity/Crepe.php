@@ -72,6 +72,13 @@ class Crepe
      */
     private $Extra;
 
+    /**
+     * @ORM\Column(type="float")
+     *
+     *  @Groups({"crepe"})
+     */
+    private $price;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -229,6 +236,18 @@ class Crepe
                 $extra->setCrepe(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }

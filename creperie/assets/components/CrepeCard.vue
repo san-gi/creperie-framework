@@ -11,27 +11,14 @@
             v-for="(i,index) in crepe.ingredients" :key="index"
             color="red"
         >
-          {{i}}
+          {{i.name}}
         </v-chip>
       </v-chip-group>
     </v-card-text>
     <v-card-text>
-      <!--
-      <v-row align="center" class="mx-0">
-        <v-rating :value="3" color="amber" dense half-increments readonly size="14"></v-rating>
-        <div class="grey--text ml-4">
-          3 (413)
-        </div>
-      </v-row>
-
-      <div class="my-4 subtitle-1">
-      </div>
-      -->
       <div>{{crepe.description}}</div>
     </v-card-text>
     <v-divider class="mx-4"></v-divider>
-
-
     <v-card-actions>
       <v-btn :to="{name: 'crepe',params:{crepe:this.crepe,name:this.crepe.name}}"color="deep-purple lighten-2" text @click="reserve">
         Consulter
