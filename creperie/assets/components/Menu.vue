@@ -28,6 +28,7 @@ export default {
     /**
      * Appel de l'api pour récupérer chaque crépes
      */
+    console.log(window.location.protocol+" "+url)
     axios.get(this.url+ '/crepes',{
       headers:{
         'Accept': 'application/json'
