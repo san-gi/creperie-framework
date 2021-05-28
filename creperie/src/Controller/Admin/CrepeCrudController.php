@@ -6,6 +6,7 @@ use App\Entity\Crepe;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CrepeCrudController extends AbstractCrudController
@@ -22,6 +23,7 @@ class CrepeCrudController extends AbstractCrudController
 
             TextField::new('name'),
             TextField::new('img'),
+            IntegerField::new('price'),
             AssociationField::new('ingredients')
 
         ];

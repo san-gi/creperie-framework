@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5149df09-046f-4998-8666-0355c7600352" name="rasp">
+        <fileTransfer rootFolder="/var/www/creperie-framework" accessType="SFTP" host="192.168.1.28" port="26" sshConfigId="0b82c295-454b-4f0e-a2e6-a4e0dd2fee70" sshConfig="pi@192.168.1.28:26 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
