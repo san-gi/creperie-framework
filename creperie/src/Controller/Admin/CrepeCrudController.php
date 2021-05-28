@@ -22,6 +22,7 @@ class CrepeCrudController extends AbstractCrudController
         return [
 
             TextField::new('name'),
+            TextField::new('description'),
             TextField::new('img'),
             IntegerField::new('price'),
             AssociationField::new('ingredients')
